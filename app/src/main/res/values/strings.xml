@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AudioRecorder</string>
+    <string name="empty_hint">Noch keine Aufnahmen.\nTippe auf das Mikrofon um zu starten.</string>
+    <string name="fab_record_desc">Aufnahme starten/stoppen</string>
+    <string name="play_desc">Abspielen</string>
+    <string name="drag_handle_desc">Verschieben</string>
+    <string name="rename_desc">Umbenennen</string>
+    <string name="delete_desc">Löschen</string>
+    <string name="rename_title">Umbenennen</string>
+    <string name="rename_ok">Speichern</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="delete_title">Aufnahme löschen</string>
+    <string name="delete_message">"%s" wirklich löschen?</string>
+    <string name="delete_ok">Löschen</string>
+    <string name="permission_denied">Mikrofonberechtigung verweigert</string>
+</resources>
+

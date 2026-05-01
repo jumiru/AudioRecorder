@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Microphone launcher icon foreground -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Background circle -->
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M0,0h108v108H0z"/>
+    <!-- Microphone body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,30c-5.52,0 -10,4.48 -10,10l0,20c0,5.52 4.48,10 10,10s10,-4.48 10,-10L64,40c0,-5.52 -4.48,-10 -10,-10zM50,40c0,-2.21 1.79,-4 4,-4s4,1.79 4,4l0,20c0,2.21 -1.79,4 -4,4s-4,-1.79 -4,-4L50,40z"/>
+    <!-- Stand arc -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M70,60c0,8.84 -7.16,16 -16,16S38,68.84 38,60h-4c0,10.94 8.07,19.96 18.5,21.5L52.5,86H48v4h16v-4h-4.5l0,-4.5C69.93,79.96 78,70.94 78,60L70,60z"/>
+</vector>
+
