@@ -27,6 +27,7 @@ public class RecordingsAdapter extends ListAdapter<Recording, RecordingsAdapter.
 
     public interface Listener {
         void onPlayClicked(Recording recording);
+        void onTrimClicked(Recording recording);
         void onRenameClicked(Recording recording);
         void onDeleteClicked(Recording recording);
         void onReordered(List<Recording> reorderedList);
@@ -82,6 +83,7 @@ public class RecordingsAdapter extends ListAdapter<Recording, RecordingsAdapter.
         holder.bind(recording, playingId == recording.id, playbackProgress);
 
         holder.btnPlay.setOnClickListener(v -> listener.onPlayClicked(recording));
+        holder.btnTrim.setOnClickListener(v -> listener.onTrimClicked(recording));
         holder.btnRename.setOnClickListener(v -> listener.onRenameClicked(recording));
         holder.btnDelete.setOnClickListener(v -> listener.onDeleteClicked(recording));
 
@@ -106,7 +108,7 @@ public class RecordingsAdapter extends ListAdapter<Recording, RecordingsAdapter.
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvDuration;
-        ImageButton btnPlay, btnRename, btnDelete;
+        ImageButton btnPlay, btnTrim, btnRename, btnDelete;
         View dragHandle;
         ProgressBar progressBar;
 
@@ -115,6 +117,7 @@ public class RecordingsAdapter extends ListAdapter<Recording, RecordingsAdapter.
             tvName = v.findViewById(R.id.tv_name);
             tvDuration = v.findViewById(R.id.tv_duration);
             btnPlay = v.findViewById(R.id.btn_play);
+            btnTrim = v.findViewById(R.id.btn_trim);
             btnRename = v.findViewById(R.id.btn_rename);
             btnDelete = v.findViewById(R.id.btn_delete);
             dragHandle = v.findViewById(R.id.drag_handle);

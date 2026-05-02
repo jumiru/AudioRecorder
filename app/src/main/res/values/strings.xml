@@ -14,5 +14,20 @@
     <string name="delete_message">"%s" wirklich löschen?</string>
     <string name="delete_ok">Löschen</string>
     <string name="permission_denied">Mikrofonberechtigung verweigert</string>
+
+    <!-- Trim -->
+    <string name="trim_desc">Trimmen</string>
+    <string name="trim_title">Aufnahme trimmen</string>
+    <string name="trim_start">Start</string>
+    <string name="trim_end">Ende</string>
+    <string name="trim_hint">Marker ziehen · Pinch zum Zoomen · Scrollen</string>
+    <string name="trim_preview">▶ Vorschau</string>
+    <string name="trim_stop_preview">⏹ Stop</string>
+    <string name="trim_cut">Schneiden</string>
+    <string name="trim_confirm_title">Aufnahme schneiden</string>
+    <string name="trim_confirm_message">Bereich %1$s – %2$s behalten und Rest entfernen?</string>
+    <string name="trim_processing">Wird verarbeitet…</string>
+    <string name="trim_success">Aufnahme erfolgreich getrimmt</string>
+    <string name="trim_error">Fehler: %1$s</string>
 </resources>
 

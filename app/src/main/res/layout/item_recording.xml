@@ -81,6 +81,19 @@
             android:contentDescription="@string/play_desc"
             app:srcCompat="@drawable/ic_play"
             app:tint="@color/colorPrimary"
+            app:layout_constraintEnd_toStartOf="@id/btn_trim"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- Trim button -->
+        <ImageButton
+            android:id="@+id/btn_trim"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/trim_desc"
+            app:srcCompat="@drawable/ic_scissors"
+            app:tint="?android:attr/textColorSecondary"
             app:layout_constraintEnd_toStartOf="@id/btn_rename"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />

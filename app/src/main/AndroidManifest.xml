@@ -26,6 +26,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.TrimActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateHidden" />
+
     </application>
 
 </manifest>

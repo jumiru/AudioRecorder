@@ -1,5 +1,6 @@
 package com.jrgames.audiorecorder;
 
+import android.content.Intent;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -7,6 +8,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.jrgames.audiorecorder.ui.OrbitalDotsView;
+import com.jrgames.audiorecorder.ui.TrimActivity;
+
+import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,8 +35,10 @@ public class MainActivity extends AppCompatActivity
     private MainViewModel viewModel;
     private RecordingsAdapter adapter;
     private FloatingActionButton fab;
+    private OrbitalDotsView orbitalDots;
 
     private Recording pendingRenameRecording;
+    private Recording pendingTrimRecording;
 
     private final ActivityResultLauncher<String[]> permissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
@@ -43,6 +50,17 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
+    private final ActivityResultLauncher<Intent> trimLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null
+                        && pendingTrimRecording != null) {
+                    String newPath = result.getData().getStringExtra(TrimActivity.RESULT_NEW_FILE_PATH);
+                    long newDuration = result.getData().getLongExtra(TrimActivity.RESULT_NEW_DURATION_MS, 0);
+                    viewModel.applyTrim(pendingTrimRecording, newPath, newDuration);
+                    pendingTrimRecording = null;
+                }
+            });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +69,7 @@ public class MainActivity extends AppCompatActivity
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         fab = findViewById(R.id.fab_record);
+        orbitalDots = findViewById(R.id.orbital_dots);
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
 
         // Adapter setup
@@ -94,9 +113,9 @@ public class MainActivity extends AppCompatActivity
 
         // Observe recording state
         viewModel.getIsRecording().observe(this, recording -> {
-            fab.setImageResource(Boolean.TRUE.equals(recording)
-                    ? R.drawable.ic_stop
-                    : R.drawable.ic_microphone);
+            boolean isRec = Boolean.TRUE.equals(recording);
+            fab.setImageResource(isRec ? R.drawable.ic_stop : R.drawable.ic_microphone);
+            orbitalDots.setVisibility(isRec ? View.VISIBLE : View.GONE);
         });
 
         // Observe playback
@@ -133,6 +152,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onPlayClicked(Recording recording) {
         viewModel.playRecording(recording);
+    }
+
+    @Override
+    public void onTrimClicked(Recording recording) {
+        pendingTrimRecording = recording;
+        Intent intent = new Intent(this, TrimActivity.class);
+        intent.putExtra(TrimActivity.EXTRA_FILE_PATH, recording.filePath);
+        intent.putExtra(TrimActivity.EXTRA_DURATION_MS, recording.durationMs);
+        intent.putExtra(TrimActivity.EXTRA_RECORDING_ID, recording.id);
+        trimLauncher.launch(intent);
     }
 
     @Override

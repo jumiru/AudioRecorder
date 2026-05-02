@@ -47,16 +47,32 @@
             android:visibility="gone" />
     </FrameLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_record"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <!-- FAB + Orbital animation wrapper -->
+    <FrameLayout
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:layout_gravity="bottom|end"
-        android:layout_margin="24dp"
-        android:contentDescription="@string/fab_record_desc"
-        app:srcCompat="@drawable/ic_microphone"
-        app:backgroundTint="@color/colorAccent"
-        app:tint="@android:color/white" />
+        android:layout_margin="8dp">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/fab_record_desc"
+            app:srcCompat="@drawable/ic_microphone"
+            app:backgroundTint="@color/colorAccent"
+            app:tint="@android:color/white" />
+
+        <!-- drawn AFTER (= on top of) the FAB so dots are always visible -->
+        <com.jrgames.audiorecorder.ui.OrbitalDotsView
+            android:id="@+id/orbital_dots"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

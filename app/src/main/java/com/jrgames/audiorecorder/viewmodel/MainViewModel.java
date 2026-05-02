@@ -214,6 +214,19 @@ public class MainViewModel extends AndroidViewModel {
         repository.delete(recording);
     }
 
+    public void applyTrim(Recording recording, String newFilePath, long newDurationMs) {
+        String oldPath = recording.filePath;
+        recording.filePath = newFilePath;
+        recording.durationMs = newDurationMs;
+        executor.execute(() -> {
+            repository.update(recording);
+            // Delete old file
+            if (oldPath != null && !oldPath.equals(newFilePath)) {
+                new java.io.File(oldPath).delete();
+            }
+        });
+    }
+
     public void reorderRecordings(List<Recording> reorderedList) {
         for (int i = 0; i < reorderedList.size(); i++) {
             reorderedList.get(i).sortOrder = i;
