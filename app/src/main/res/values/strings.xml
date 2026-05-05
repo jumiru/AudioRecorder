@@ -15,6 +15,19 @@
     <string name="delete_ok">Löschen</string>
     <string name="permission_denied">Mikrofonberechtigung verweigert</string>
 
+    <!-- WebDAV Upload -->
+    <string name="upload_desc">Auf NAS hochladen</string>
+    <string name="webdav_upload_title">Hochladen: %s</string>
+    <string name="webdav_hint_server">Server-URL (z.B. https://nas.local/dav/)</string>
+    <string name="webdav_hint_user">Benutzername</string>
+    <string name="webdav_hint_password">Passwort</string>
+    <string name="webdav_hint_dir">Verzeichnis (z.B. /Aufnahmen/)</string>
+    <string name="webdav_btn_upload">Hochladen</string>
+    <string name="webdav_uploading">Wird hochgeladen…</string>
+    <string name="webdav_upload_success">Erfolgreich hochgeladen!</string>
+    <string name="webdav_upload_error">Fehler: %s</string>
+    <string name="webdav_error_server_empty">Server-URL darf nicht leer sein</string>
+
     <!-- Trim -->
     <string name="trim_desc">Trimmen</string>
     <string name="trim_title">Aufnahme trimmen</string>

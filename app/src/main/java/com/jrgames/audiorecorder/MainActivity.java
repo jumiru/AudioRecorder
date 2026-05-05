@@ -25,6 +25,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jrgames.audiorecorder.data.Recording;
 import com.jrgames.audiorecorder.ui.RecordingsAdapter;
 import com.jrgames.audiorecorder.ui.RenameDialogFragment;
+import com.jrgames.audiorecorder.ui.WebDavUploadDialogFragment;
 import com.jrgames.audiorecorder.viewmodel.MainViewModel;
 
 import java.util.List;
@@ -152,6 +153,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onPlayClicked(Recording recording) {
         viewModel.playRecording(recording);
+    }
+
+    @Override
+    public void onUploadClicked(Recording recording) {
+        WebDavUploadDialogFragment.newInstance(recording)
+                .show(getSupportFragmentManager(), "webdav_upload");
     }
 
     @Override

@@ -81,6 +81,19 @@
             android:contentDescription="@string/play_desc"
             app:srcCompat="@drawable/ic_play"
             app:tint="@color/colorPrimary"
+            app:layout_constraintEnd_toStartOf="@id/btn_upload"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- Upload button -->
+        <ImageButton
+            android:id="@+id/btn_upload"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/upload_desc"
+            app:srcCompat="@drawable/ic_upload"
+            app:tint="?android:attr/textColorSecondary"
             app:layout_constraintEnd_toStartOf="@id/btn_trim"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />

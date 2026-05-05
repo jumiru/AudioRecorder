@@ -47,5 +47,8 @@ dependencies {
 
     // Activity KTX (for by viewModels, etc.)
     implementation 'androidx.activity:activity:1.9.0'
+
+    // OkHttp for WebDAV uploads
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 }
 
