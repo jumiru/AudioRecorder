@@ -14,6 +14,7 @@
     <string name="delete_message">"%s" wirklich löschen?</string>
     <string name="delete_ok">Löschen</string>
     <string name="permission_denied">Mikrofonberechtigung verweigert</string>
+    <string name="open_player_desc">Player-Ansicht fur diese Aufnahme offnen</string>
 
     <!-- WebDAV Upload -->
     <string name="upload_desc">Auf NAS hochladen</string>
@@ -42,5 +43,37 @@
     <string name="trim_processing">Wird verarbeitet…</string>
     <string name="trim_success">Aufnahme erfolgreich getrimmt</string>
     <string name="trim_error">Fehler: %1$s</string>
+
+    <!-- Player -->
+    <string name="player_title">Player</string>
+    <string name="player_start">Start</string>
+    <string name="player_play">Play</string>
+    <string name="player_pause">Pause</string>
+    <string name="player_stop">Stop</string>
+    <string name="player_start_desc">An den Anfang springen</string>
+    <string name="player_rewind_desc">Ruckwarts abspielen</string>
+    <string name="player_play_desc">Abspielen</string>
+    <string name="player_pause_desc">Pause</string>
+    <string name="player_stop_desc">Stopp</string>
+    <string name="player_repeat_desc">Repeat zwischen Markern</string>
+    <string name="player_set_start_marker">Gruen = Position</string>
+    <string name="player_set_end_marker">Rot = Position</string>
+    <string name="player_set_start_marker_desc">Gruenen Marker auf aktuelle Position setzen</string>
+    <string name="player_set_end_marker_desc">Roten Marker auf aktuelle Position setzen</string>
+    <string name="player_jump_end_desc">Ans Ende springen</string>
+    <string name="player_jump_green_desc">Zu gruener Marke springen</string>
+    <string name="player_jump_red_desc">Zu roter Marke springen</string>
+    <string name="player_section_set_marker">Set marker</string>
+    <string name="player_section_play_control">Play control</string>
+    <string name="player_section_jump">Jump</string>
+    <string name="player_section_actions">Actions</string>
+    <string name="player_waveform_desc">Wellenform der Aufnahme</string>
+    <string name="player_actions">Aktionen</string>
+    <string name="player_time_zero">0:00</string>
+    <string name="player_name_placeholder">-</string>
+    <string name="player_default_name">Aufnahme</string>
+    <string name="player_load_error">Aufnahme konnte nicht geladen werden</string>
+    <string name="player_play_error">Wiedergabe konnte nicht gestartet werden</string>
+    <string name="player_reverse_error">Ruckwartswiedergabe konnte nicht gestartet werden</string>
 </resources>
 

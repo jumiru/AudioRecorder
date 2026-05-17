@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_player"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:fitsSystemWindows="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+            android:id="@+id/tv_player_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:text="@string/player_name_placeholder" />
+
+        <com.jrgames.audiorecorder.ui.WaveformView
+            android:id="@+id/waveform_player"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="12dp"
+            android:contentDescription="@string/player_waveform_desc" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:id="@+id/tv_player_current"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/player_time_zero" />
+
+            <TextView
+                android:id="@+id/tv_player_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/player_time_zero"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/seek_player"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/player_section_set_marker"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_player_set_start_marker"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_marginEnd="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/player_set_start_marker_desc"
+                app:srcCompat="@drawable/ic_marker_set_start"
+                app:tint="#FF4CAF50" />
+
+            <ImageButton
+                android:id="@+id/btn_player_set_end_marker"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/player_set_end_marker_desc"
+                app:srcCompat="@drawable/ic_marker_set_end"
+                app:tint="#FFFF5722" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/player_section_play_control"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="12dp">
+
+            <ImageButton
+                android:id="@+id/btn_player_rewind"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_marginEnd="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/player_rewind_desc"
+                android:rotation="180"
+                app:srcCompat="@drawable/ic_play"
+                app:tint="?android:attr/textColorSecondary" />
+
+            <ImageButton
+                android:id="@+id/btn_player_play"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/player_play_desc"
+                app:srcCompat="@drawable/ic_play"
+                app:tint="@color/colorPrimary" />
+
+            <ImageButton
+                android:id="@+id/btn_player_pause"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/player_pause_desc"
+                app:srcCompat="@drawable/ic_pause"
+                app:tint="?android:attr/textColorSecondary" />
+
+            <ImageButton
+                android:id="@+id/btn_player_stop"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/player_stop_desc"
+                app:srcCompat="@drawable/ic_stop"
+                app:tint="?android:attr/textColorSecondary" />
+
+            <ImageButton
+                android:id="@+id/btn_player_repeat"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/player_repeat_desc"
+                app:srcCompat="@drawable/ic_repeat"
+                app:tint="?android:attr/textColorSecondary" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/player_section_jump"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="8dp">
+
+            <ImageButton
+                android:id="@+id/btn_player_start"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/player_start_desc"
+                app:srcCompat="@drawable/ic_skip_previous"
+                app:tint="?android:attr/textColorSecondary" />
+
+            <ImageButton
+                android:id="@+id/btn_player_jump_green"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginHorizontal="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/player_jump_green_desc"
+                app:srcCompat="@drawable/ic_marker_set_start"
+                app:tint="#FF4CAF50" />
+
+            <ImageButton
+                android:id="@+id/btn_player_jump_red"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginHorizontal="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/player_jump_red_desc"
+                app:srcCompat="@drawable/ic_marker_set_end"
+                app:tint="#FFFF5722" />
+
+            <ImageButton
+                android:id="@+id/btn_player_jump_end"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/player_jump_end_desc"
+                app:srcCompat="@drawable/ic_skip_next"
+                app:tint="?android:attr/textColorSecondary" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="18dp"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/player_section_actions"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="8dp">
+
+            <ImageButton
+                android:id="@+id/btn_player_upload"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/upload_desc"
+                app:srcCompat="@drawable/ic_upload"
+                app:tint="?android:attr/textColorSecondary" />
+
+            <ImageButton
+                android:id="@+id/btn_player_trim"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginHorizontal="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/trim_desc"
+                app:srcCompat="@drawable/ic_scissors"
+                app:tint="?android:attr/textColorSecondary" />
+
+            <ImageButton
+                android:id="@+id/btn_player_rename"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginHorizontal="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/rename_desc"
+                app:srcCompat="@drawable/ic_edit"
+                app:tint="?android:attr/textColorSecondary" />
+
+            <ImageButton
+                android:id="@+id/btn_player_delete"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/delete_desc"
+                app:srcCompat="@drawable/ic_delete"
+                app:tint="@color/colorDelete" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+
+
+
+
+
+
+
+
+

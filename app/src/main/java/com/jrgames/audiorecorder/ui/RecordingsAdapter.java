@@ -27,6 +27,7 @@ public class RecordingsAdapter extends ListAdapter<Recording, RecordingsAdapter.
 
     public interface Listener {
         void onPlayClicked(Recording recording);
+        void onNameClicked(Recording recording);
         void onUploadClicked(Recording recording);
         void onTrimClicked(Recording recording);
         void onRenameClicked(Recording recording);
@@ -47,7 +48,11 @@ public class RecordingsAdapter extends ListAdapter<Recording, RecordingsAdapter.
 
         @Override
         public boolean areContentsTheSame(@NonNull Recording a, @NonNull Recording b) {
-            return a.displayName.equals(b.displayName) && a.sortOrder == b.sortOrder;
+            return a.displayName.equals(b.displayName)
+                    && a.filePath.equals(b.filePath)
+                    && a.durationMs == b.durationMs
+                    && a.sortOrder == b.sortOrder
+                    && a.createdAt == b.createdAt;
         }
     };
 
@@ -84,6 +89,7 @@ public class RecordingsAdapter extends ListAdapter<Recording, RecordingsAdapter.
         holder.bind(recording, playingId == recording.id, playbackProgress);
 
         holder.btnPlay.setOnClickListener(v -> listener.onPlayClicked(recording));
+        holder.tvName.setOnClickListener(v -> listener.onNameClicked(recording));
         holder.btnUpload.setOnClickListener(v -> listener.onUploadClicked(recording));
         holder.btnTrim.setOnClickListener(v -> listener.onTrimClicked(recording));
         holder.btnRename.setOnClickListener(v -> listener.onRenameClicked(recording));

@@ -6,9 +6,11 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.jrgames.audiorecorder.ui.OrbitalDotsView;
+import com.jrgames.audiorecorder.ui.PlayerActivity;
 import com.jrgames.audiorecorder.ui.TrimActivity;
 
 import androidx.activity.result.ActivityResult;
@@ -117,6 +119,13 @@ public class MainActivity extends AppCompatActivity
             boolean isRec = Boolean.TRUE.equals(recording);
             fab.setImageResource(isRec ? R.drawable.ic_stop : R.drawable.ic_microphone);
             orbitalDots.setVisibility(isRec ? View.VISIBLE : View.GONE);
+
+            // Keep screen on while recording so the device doesn't auto-lock mid-take.
+            if (isRec) {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            } else {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
         });
 
         // Observe playback
@@ -153,6 +162,18 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onPlayClicked(Recording recording) {
         viewModel.playRecording(recording);
+    }
+
+    @Override
+    public void onNameClicked(Recording recording) {
+        Intent intent = new Intent(this, PlayerActivity.class);
+        intent.putExtra(PlayerActivity.EXTRA_RECORDING_ID, recording.id);
+        intent.putExtra(PlayerActivity.EXTRA_DISPLAY_NAME, recording.displayName);
+        intent.putExtra(PlayerActivity.EXTRA_FILE_PATH, recording.filePath);
+        intent.putExtra(PlayerActivity.EXTRA_DURATION_MS, recording.durationMs);
+        intent.putExtra(PlayerActivity.EXTRA_SORT_ORDER, recording.sortOrder);
+        intent.putExtra(PlayerActivity.EXTRA_CREATED_AT, recording.createdAt);
+        startActivity(intent);
     }
 
     @Override

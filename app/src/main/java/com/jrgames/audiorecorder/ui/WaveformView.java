@@ -43,8 +43,8 @@ public class WaveformView extends View {
     private float scrollX = 0f;        // pixels scrolled from left
 
     // Markers (0..1 fractions of total duration)
-    private float startMarker = 0.1f;
-    private float endMarker   = 0.9f;
+    private float startMarker = 0f;
+    private float endMarker   = 1f;
 
     // Touch handling
     private static final int TOUCH_NONE  = 0;
@@ -163,12 +163,42 @@ public class WaveformView extends View {
     public float getStartMarker() { return startMarker; }
     public float getEndMarker()   { return endMarker;   }
 
+    public void setStartMarker(float fraction) {
+        float clamped = snapFractionToZeroCrossing(fraction);
+        startMarker = Math.min(clamped, endMarker - 0.01f);
+        notifyMarkerChanged();
+        invalidate();
+    }
+
+    public void setEndMarker(float fraction) {
+        float clamped = snapFractionToZeroCrossing(fraction);
+        endMarker = Math.max(clamped, startMarker + 0.01f);
+        notifyMarkerChanged();
+        invalidate();
+    }
+
+    public void setMarkers(float startFraction, float endFraction) {
+        float start = snapFractionToZeroCrossing(startFraction);
+        float end = snapFractionToZeroCrossing(endFraction);
+        if (end - start < 0.01f) {
+            end = Math.min(1f, start + 0.01f);
+            start = Math.max(0f, end - 0.01f);
+        }
+        startMarker = start;
+        endMarker = end;
+        notifyMarkerChanged();
+        invalidate();
+    }
+
     public void loadAudio(String filePath) {
         samples = null;
         isLoading = true;
         loadError = null;
+        startMarker = 0f;
+        endMarker = 1f;
         zoom = 1f;
         scrollX = 0f;
+        notifyMarkerChanged();
         invalidate();
 
         executor.execute(() -> {
@@ -297,8 +327,7 @@ public class WaveformView extends View {
                 float tx = event.getX();
                 if (touchMode == TOUCH_START || touchMode == TOUCH_END) {
                     float totalWidth = getWidth() * zoom;
-                    float fraction = (tx + scrollX) / totalWidth;
-                    fraction = Math.max(0f, Math.min(1f, fraction));
+                    float fraction = snapFractionToZeroCrossing((tx + scrollX) / totalWidth);
                     if (touchMode == TOUCH_START) {
                         startMarker = Math.min(fraction, endMarker - 0.01f);
                     } else {
@@ -342,6 +371,86 @@ public class WaveformView extends View {
 
     private float dpToPx(float dp) {
         return dp * getResources().getDisplayMetrics().density;
+    }
+
+    private float clampFraction(float value) {
+        return Math.max(0f, Math.min(1f, value));
+    }
+
+    private float snapFractionToZeroCrossing(float fraction) {
+        float clamped = clampFraction(fraction);
+        if (samples == null || samples.length < 2) {
+            return clamped;
+        }
+
+        int targetIndex = Math.max(0, Math.min(samples.length - 1, Math.round(clamped * (samples.length - 1))));
+        int searchRadius = Math.max(16, samples.length / 150);
+        int from = Math.max(1, targetIndex - searchRadius);
+        int to = Math.min(samples.length - 1, targetIndex + searchRadius);
+
+        int bestQuietIndex = -1;
+        int bestQuietDistance = Integer.MAX_VALUE;
+        int bestQuietPeak = Integer.MAX_VALUE;
+
+        int bestAnyIndex = -1;
+        int bestAnyDistance = Integer.MAX_VALUE;
+        int bestAnyPeak = Integer.MAX_VALUE;
+
+        for (int i = from; i <= to; i++) {
+            if (isZeroCrossingAt(i)) {
+                int distance = Math.abs(i - targetIndex);
+                int localPeak = localPeakAroundIndex(i, 2);
+
+                if (localPeak <= 1800 && (distance < bestQuietDistance || (distance == bestQuietDistance && localPeak < bestQuietPeak))) {
+                    bestQuietDistance = distance;
+                    bestQuietPeak = localPeak;
+                    bestQuietIndex = i;
+                }
+
+                if (distance < bestAnyDistance || (distance == bestAnyDistance && localPeak < bestAnyPeak)) {
+                    bestAnyDistance = distance;
+                    bestAnyPeak = localPeak;
+                    bestAnyIndex = i;
+                }
+            }
+        }
+
+        if (bestQuietIndex != -1) {
+            return bestQuietIndex / (float) Math.max(1, samples.length - 1);
+        }
+
+        if (bestAnyIndex == -1) {
+            return clamped;
+        }
+
+        return bestAnyIndex / (float) Math.max(1, samples.length - 1);
+    }
+
+    private boolean isZeroCrossingAt(int index) {
+        if (index <= 0 || index >= samples.length) {
+            return false;
+        }
+
+        short prev = samples[index - 1];
+        short curr = samples[index];
+        if (prev == 0 || curr == 0) {
+            return true;
+        }
+        return (prev < 0 && curr > 0) || (prev > 0 && curr < 0);
+    }
+
+    private int localPeakAroundIndex(int index, int radius) {
+        if (samples == null || samples.length == 0) {
+            return Integer.MAX_VALUE;
+        }
+
+        int from = Math.max(0, index - radius);
+        int to = Math.min(samples.length - 1, index + radius);
+        int peak = 0;
+        for (int i = from; i <= to; i++) {
+            peak = Math.max(peak, Math.abs(samples[i]));
+        }
+        return peak;
     }
 
     // ── Audio decoding ───────────────────────────────────────────────────────
@@ -415,17 +524,29 @@ public class WaveformView extends View {
         short[] allSamples = new short[sb.remaining()];
         sb.get(allSamples);
 
-        // Downsample to ~2000 points
+        // Downsample to ~2000 points and normalize to the strongest peak so
+        // quieter recordings still show visible detail (e.g. noise floor).
         int targetPoints = 2000;
         if (allSamples.length <= targetPoints) return allSamples;
         int step = allSamples.length / targetPoints;
         short[] result = new short[targetPoints];
+        short maxPeak = 0;
         for (int i = 0; i < targetPoints; i++) {
             long peak = 0;
             for (int j = 0; j < step; j++) {
                 peak = Math.max(peak, Math.abs(allSamples[i * step + j]));
             }
             result[i] = (short) peak;
+            maxPeak = (short) Math.max(maxPeak, result[i]);
+        }
+
+        if (maxPeak <= 0) {
+            return result;
+        }
+
+        float scale = 32767f / maxPeak;
+        for (int i = 0; i < result.length; i++) {
+            result[i] = (short) Math.min(32767, Math.round(result[i] * scale));
         }
         return result;
     }

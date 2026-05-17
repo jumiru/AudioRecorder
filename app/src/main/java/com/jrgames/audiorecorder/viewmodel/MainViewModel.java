@@ -202,8 +202,15 @@ public class MainViewModel extends AndroidViewModel {
     // ── CRUD ───────────────────────────────────────────────────────────────────
 
     public void renameRecording(Recording recording, String newName) {
-        recording.displayName = newName;
-        repository.update(recording);
+        Recording updated = new Recording(
+                newName,
+                recording.filePath,
+                recording.durationMs,
+                recording.sortOrder,
+                recording.createdAt
+        );
+        updated.id = recording.id;
+        repository.update(updated);
     }
 
     public void deleteRecording(Recording recording) {

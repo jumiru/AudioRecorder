@@ -34,6 +34,11 @@
             android:exported="false"
             android:windowSoftInputMode="stateHidden" />
 
+        <activity
+            android:name=".ui.PlayerActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
+
     </application>
 
 </manifest>
