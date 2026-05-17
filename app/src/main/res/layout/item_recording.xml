@@ -4,21 +4,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="8dp"
-    android:layout_marginVertical="4dp"
-    app:cardElevation="2dp"
-    app:cardCornerRadius="12dp">
+    android:layout_marginHorizontal="@dimen/space_2"
+    android:layout_marginVertical="@dimen/space_1"
+    style="@style/Widget.AudioRecorder.Card">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="@dimen/space_2">
 
         <!-- Drag handle -->
         <ImageButton
             android:id="@+id/drag_handle"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/touch_icon_button"
+            android:layout_height="@dimen/touch_icon_button"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/drag_handle_desc"
             app:srcCompat="@drawable/ic_drag_handle"
@@ -36,15 +35,16 @@
             android:clickable="true"
             android:focusable="true"
             android:contentDescription="@string/open_player_desc"
-            android:textSize="15sp"
+            android:textSize="16sp"
+            android:textColor="@color/colorOnSurface"
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintStart_toEndOf="@id/drag_handle"
             app:layout_constraintEnd_toStartOf="@id/btn_play"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp" />
+            android:layout_marginStart="@dimen/space_1"
+            android:layout_marginEnd="@dimen/space_1" />
 
         <!-- Duration -->
         <TextView
@@ -52,11 +52,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:textColor="?android:attr/textColorSecondary"
+            android:textColor="@color/colorOnSurfaceVariant"
             app:layout_constraintStart_toEndOf="@id/drag_handle"
             app:layout_constraintEnd_toStartOf="@id/btn_play"
             app:layout_constraintTop_toBottomOf="@id/tv_name"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="@dimen/space_1"
             android:layout_marginTop="2dp" />
 
         <!-- Progress bar (playback) -->
@@ -71,16 +71,16 @@
             app:layout_constraintStart_toEndOf="@id/drag_handle"
             app:layout_constraintEnd_toStartOf="@id/btn_play"
             app:layout_constraintTop_toBottomOf="@id/tv_duration"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginStart="@dimen/space_1"
+            android:layout_marginTop="@dimen/space_1"
             android:layout_marginBottom="2dp"
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <!-- Play/Stop button -->
         <ImageButton
             android:id="@+id/btn_play"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/touch_icon_button"
+            android:layout_height="@dimen/touch_icon_button"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/play_desc"
             app:srcCompat="@drawable/ic_play"
@@ -92,8 +92,8 @@
         <!-- Upload button -->
         <ImageButton
             android:id="@+id/btn_upload"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/touch_icon_button"
+            android:layout_height="@dimen/touch_icon_button"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/upload_desc"
             app:srcCompat="@drawable/ic_upload"
@@ -105,8 +105,8 @@
         <!-- Trim button -->
         <ImageButton
             android:id="@+id/btn_trim"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/touch_icon_button"
+            android:layout_height="@dimen/touch_icon_button"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/trim_desc"
             app:srcCompat="@drawable/ic_scissors"
@@ -118,8 +118,8 @@
         <!-- Rename button -->
         <ImageButton
             android:id="@+id/btn_rename"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/touch_icon_button"
+            android:layout_height="@dimen/touch_icon_button"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/rename_desc"
             app:srcCompat="@drawable/ic_edit"
@@ -131,8 +131,8 @@
         <!-- Delete button -->
         <ImageButton
             android:id="@+id/btn_delete"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/touch_icon_button"
+            android:layout_height="@dimen/touch_icon_button"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/delete_desc"
             app:srcCompat="@drawable/ic_delete"

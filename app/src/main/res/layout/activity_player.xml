@@ -71,226 +71,242 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp" />
 
-        <TextView
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.AudioRecorder.SectionCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/player_section_set_marker"
-            android:textStyle="bold" />
+            android:layout_marginTop="@dimen/space_2">
 
-        <LinearLayout
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/space_3">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/player_section_set_marker"
+                    style="@style/TextAppearance.AudioRecorder.Section" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_2"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/btn_player_set_start_marker"
+                        style="@style/Widget.AudioRecorder.IconButton.Large"
+                        android:layout_marginEnd="10dp"
+                        android:contentDescription="@string/player_set_start_marker_desc"
+                        app:srcCompat="@drawable/ic_marker_set_start"
+                        app:tint="#FF4CAF50" />
+
+                    <ImageButton
+                        android:id="@+id/btn_player_set_end_marker"
+                        style="@style/Widget.AudioRecorder.IconButton.Large"
+                        android:layout_marginStart="10dp"
+                        android:contentDescription="@string/player_set_end_marker_desc"
+                        app:srcCompat="@drawable/ic_marker_set_end"
+                        app:tint="#FFFF5722" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.AudioRecorder.SectionCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_marginTop="@dimen/space_3">
 
-            <ImageButton
-                android:id="@+id/btn_player_set_start_marker"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:layout_marginEnd="10dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/player_set_start_marker_desc"
-                app:srcCompat="@drawable/ic_marker_set_start"
-                app:tint="#FF4CAF50" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/space_3">
 
-            <ImageButton
-                android:id="@+id/btn_player_set_end_marker"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:layout_marginStart="10dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/player_set_end_marker_desc"
-                app:srcCompat="@drawable/ic_marker_set_end"
-                app:tint="#FFFF5722" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/player_section_play_control"
+                    style="@style/TextAppearance.AudioRecorder.Section" />
 
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_2"
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
-        <TextView
+                    <ImageButton
+                        android:id="@+id/btn_player_rewind"
+                        style="@style/Widget.AudioRecorder.IconButton.Large"
+                        android:layout_marginEnd="10dp"
+                        android:contentDescription="@string/player_rewind_desc"
+                        android:rotation="180"
+                        app:srcCompat="@drawable/ic_play"
+                        app:tint="?android:attr/textColorSecondary" />
+
+                    <ImageButton
+                        android:id="@+id/btn_player_play"
+                        style="@style/Widget.AudioRecorder.IconButton.Large"
+                        android:layout_marginHorizontal="10dp"
+                        android:contentDescription="@string/player_play_desc"
+                        app:srcCompat="@drawable/ic_play"
+                        app:tint="@color/colorPrimary" />
+
+                    <ImageButton
+                        android:id="@+id/btn_player_pause"
+                        style="@style/Widget.AudioRecorder.IconButton.Large"
+                        android:layout_marginHorizontal="10dp"
+                        android:contentDescription="@string/player_pause_desc"
+                        app:srcCompat="@drawable/ic_pause"
+                        app:tint="?android:attr/textColorSecondary" />
+
+                    <ImageButton
+                        android:id="@+id/btn_player_stop"
+                        style="@style/Widget.AudioRecorder.IconButton.Large"
+                        android:layout_marginStart="10dp"
+                        android:contentDescription="@string/player_stop_desc"
+                        app:srcCompat="@drawable/ic_stop"
+                        app:tint="?android:attr/textColorSecondary" />
+
+                    <ImageButton
+                        android:id="@+id/btn_player_repeat"
+                        style="@style/Widget.AudioRecorder.IconButton.Large"
+                        android:layout_marginStart="10dp"
+                        android:contentDescription="@string/player_repeat_desc"
+                        app:srcCompat="@drawable/ic_repeat"
+                        app:tint="?android:attr/textColorSecondary" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.AudioRecorder.SectionCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/player_section_play_control"
-            android:textStyle="bold" />
+            android:layout_marginTop="@dimen/space_3">
 
-        <LinearLayout
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/space_3">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/player_section_jump"
+                    style="@style/TextAppearance.AudioRecorder.Section" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_2"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <ImageButton
+                        android:id="@+id/btn_player_start"
+                        style="@style/Widget.AudioRecorder.IconButton"
+                        android:layout_marginEnd="8dp"
+                        android:contentDescription="@string/player_start_desc"
+                        app:srcCompat="@drawable/ic_skip_previous"
+                        app:tint="?android:attr/textColorSecondary" />
+
+                    <ImageButton
+                        android:id="@+id/btn_player_jump_green"
+                        style="@style/Widget.AudioRecorder.IconButton"
+                        android:layout_marginHorizontal="8dp"
+                        android:contentDescription="@string/player_jump_green_desc"
+                        app:srcCompat="@drawable/ic_marker_set_start"
+                        app:tint="#FF4CAF50" />
+
+                    <ImageButton
+                        android:id="@+id/btn_player_jump_red"
+                        style="@style/Widget.AudioRecorder.IconButton"
+                        android:layout_marginHorizontal="8dp"
+                        android:contentDescription="@string/player_jump_red_desc"
+                        app:srcCompat="@drawable/ic_marker_set_end"
+                        app:tint="#FFFF5722" />
+
+                    <ImageButton
+                        android:id="@+id/btn_player_jump_end"
+                        style="@style/Widget.AudioRecorder.IconButton"
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="@string/player_jump_end_desc"
+                        app:srcCompat="@drawable/ic_skip_next"
+                        app:tint="?android:attr/textColorSecondary" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.AudioRecorder.SectionCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="12dp">
+            android:layout_marginTop="@dimen/space_3">
 
-            <ImageButton
-                android:id="@+id/btn_player_rewind"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:layout_marginEnd="10dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/player_rewind_desc"
-                android:rotation="180"
-                app:srcCompat="@drawable/ic_play"
-                app:tint="?android:attr/textColorSecondary" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/space_3">
 
-            <ImageButton
-                android:id="@+id/btn_player_play"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:layout_marginHorizontal="10dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/player_play_desc"
-                app:srcCompat="@drawable/ic_play"
-                app:tint="@color/colorPrimary" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/player_section_actions"
+                    style="@style/TextAppearance.AudioRecorder.Section" />
 
-            <ImageButton
-                android:id="@+id/btn_player_pause"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:layout_marginHorizontal="10dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/player_pause_desc"
-                app:srcCompat="@drawable/ic_pause"
-                app:tint="?android:attr/textColorSecondary" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_2"
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
-            <ImageButton
-                android:id="@+id/btn_player_stop"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:layout_marginStart="10dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/player_stop_desc"
-                app:srcCompat="@drawable/ic_stop"
-                app:tint="?android:attr/textColorSecondary" />
+                    <ImageButton
+                        android:id="@+id/btn_player_upload"
+                        style="@style/Widget.AudioRecorder.IconButton"
+                        android:layout_marginEnd="8dp"
+                        android:contentDescription="@string/upload_desc"
+                        app:srcCompat="@drawable/ic_upload"
+                        app:tint="?android:attr/textColorSecondary" />
 
-            <ImageButton
-                android:id="@+id/btn_player_repeat"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:layout_marginStart="10dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/player_repeat_desc"
-                app:srcCompat="@drawable/ic_repeat"
-                app:tint="?android:attr/textColorSecondary" />
+                    <ImageButton
+                        android:id="@+id/btn_player_trim"
+                        style="@style/Widget.AudioRecorder.IconButton"
+                        android:layout_marginHorizontal="8dp"
+                        android:contentDescription="@string/trim_desc"
+                        app:srcCompat="@drawable/ic_scissors"
+                        app:tint="?android:attr/textColorSecondary" />
 
-        </LinearLayout>
+                    <ImageButton
+                        android:id="@+id/btn_player_rename"
+                        style="@style/Widget.AudioRecorder.IconButton"
+                        android:layout_marginHorizontal="8dp"
+                        android:contentDescription="@string/rename_desc"
+                        app:srcCompat="@drawable/ic_edit"
+                        app:tint="?android:attr/textColorSecondary" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/player_section_jump"
-            android:textStyle="bold" />
+                    <ImageButton
+                        android:id="@+id/btn_player_delete"
+                        style="@style/Widget.AudioRecorder.IconButton"
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="@string/delete_desc"
+                        app:srcCompat="@drawable/ic_delete"
+                        app:tint="@color/colorDelete" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="8dp">
-
-            <ImageButton
-                android:id="@+id/btn_player_start"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/player_start_desc"
-                app:srcCompat="@drawable/ic_skip_previous"
-                app:tint="?android:attr/textColorSecondary" />
-
-            <ImageButton
-                android:id="@+id/btn_player_jump_green"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginHorizontal="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/player_jump_green_desc"
-                app:srcCompat="@drawable/ic_marker_set_start"
-                app:tint="#FF4CAF50" />
-
-            <ImageButton
-                android:id="@+id/btn_player_jump_red"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginHorizontal="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/player_jump_red_desc"
-                app:srcCompat="@drawable/ic_marker_set_end"
-                app:tint="#FFFF5722" />
-
-            <ImageButton
-                android:id="@+id/btn_player_jump_end"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/player_jump_end_desc"
-                app:srcCompat="@drawable/ic_skip_next"
-                app:tint="?android:attr/textColorSecondary" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="18dp"
-            android:background="?android:attr/listDivider" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/player_section_actions"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="8dp">
-
-            <ImageButton
-                android:id="@+id/btn_player_upload"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/upload_desc"
-                app:srcCompat="@drawable/ic_upload"
-                app:tint="?android:attr/textColorSecondary" />
-
-            <ImageButton
-                android:id="@+id/btn_player_trim"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginHorizontal="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/trim_desc"
-                app:srcCompat="@drawable/ic_scissors"
-                app:tint="?android:attr/textColorSecondary" />
-
-            <ImageButton
-                android:id="@+id/btn_player_rename"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginHorizontal="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/rename_desc"
-                app:srcCompat="@drawable/ic_edit"
-                app:tint="?android:attr/textColorSecondary" />
-
-            <ImageButton
-                android:id="@+id/btn_player_delete"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/delete_desc"
-                app:srcCompat="@drawable/ic_delete"
-                app:tint="@color/colorDelete" />
-
-        </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 

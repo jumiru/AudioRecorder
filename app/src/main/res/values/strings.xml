@@ -63,6 +63,14 @@
     <string name="player_jump_end_desc">Ans Ende springen</string>
     <string name="player_jump_green_desc">Zu gruener Marke springen</string>
     <string name="player_jump_red_desc">Zu roter Marke springen</string>
+    <string name="player_repeat_on">Repeat aktiviert</string>
+    <string name="player_repeat_off">Repeat deaktiviert</string>
+    <string name="player_marker_green_set">Gruener Marker gesetzt</string>
+    <string name="player_marker_red_set">Roter Marker gesetzt</string>
+    <string name="player_jump_start_done">Zum Anfang gesprungen</string>
+    <string name="player_jump_end_done">Zum Ende gesprungen</string>
+    <string name="player_jump_green_done">Zum gruenen Marker gesprungen</string>
+    <string name="player_jump_red_done">Zum roten Marker gesprungen</string>
     <string name="player_section_set_marker">Set marker</string>
     <string name="player_section_play_control">Play control</string>
     <string name="player_section_jump">Jump</string>

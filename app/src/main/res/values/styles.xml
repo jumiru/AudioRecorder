@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.AudioRecorder.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">@dimen/radius_medium</item>
+        <item name="cardElevation">@dimen/elevation_card</item>
+        <item name="cardBackgroundColor">@color/colorSurface</item>
+        <item name="strokeColor">@color/colorSurfaceVariant</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <style name="TextAppearance.AudioRecorder.Section" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorOnSurfaceVariant</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.06</item>
+    </style>
+
+    <style name="Widget.AudioRecorder.SectionCard" parent="Widget.AudioRecorder.Card">
+        <item name="cardCornerRadius">@dimen/radius_small</item>
+        <item name="cardElevation">1dp</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <style name="Widget.AudioRecorder.IconButton" parent="Widget.AppCompat.ImageButton">
+        <item name="android:layout_width">@dimen/touch_icon_button</item>
+        <item name="android:layout_height">@dimen/touch_icon_button</item>
+        <item name="android:background">@drawable/bg_player_control_idle</item>
+        <item name="android:foreground">?attr/selectableItemBackgroundBorderless</item>
+    </style>
+
+    <style name="Widget.AudioRecorder.IconButton.Large" parent="Widget.AudioRecorder.IconButton">
+        <item name="android:layout_width">@dimen/touch_icon_button_large</item>
+        <item name="android:layout_height">@dimen/touch_icon_button_large</item>
+    </style>
+</resources>
+
+

@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
+import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -343,6 +344,9 @@ public class WaveformView extends View {
             }
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+                if (touchMode == TOUCH_START || touchMode == TOUCH_END) {
+                    performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);
+                }
                 if (touchMode == TOUCH_SCROLL) {
                     gestureDetector.onTouchEvent(event);
                 }

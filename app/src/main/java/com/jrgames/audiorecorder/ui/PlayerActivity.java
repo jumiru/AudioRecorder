@@ -11,8 +11,11 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.SparseBooleanArray;
 import android.util.TypedValue;
+import android.view.HapticFeedbackConstants;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -21,12 +24,14 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 import com.jrgames.audiorecorder.R;
 import com.jrgames.audiorecorder.data.Recording;
 import com.jrgames.audiorecorder.viewmodel.MainViewModel;
@@ -65,6 +70,7 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
 
     private int activeIconColor;
     private int inactiveIconColor;
+    private final SparseBooleanArray controlActiveStates = new SparseBooleanArray();
 
     private MediaPlayer mediaPlayer;
     private final Handler progressHandler = new Handler(Looper.getMainLooper());
@@ -232,6 +238,8 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
         btnRepeat.setOnClickListener(v -> {
             repeatEnabled = !repeatEnabled;
             updateDirectionButtonsUi();
+            performUiHaptic();
+            showUiFeedback(repeatEnabled ? R.string.player_repeat_on : R.string.player_repeat_off);
         });
         btnJumpEnd.setOnClickListener(v -> jumpToEnd());
         btnJumpGreen.setOnClickListener(v -> jumpToGreenMarker());
@@ -367,19 +375,27 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
         }
         seekBar.setProgress(0);
         tvCurrent.setText(formatTime(0));
+        performUiHaptic();
+        showUiFeedback(R.string.player_jump_start_done);
         updateDirectionButtonsUi();
     }
 
     private void jumpToEnd() {
         jumpToPosition(Math.max(0, seekBar.getMax()));
+        performUiHaptic();
+        showUiFeedback(R.string.player_jump_end_done);
     }
 
     private void jumpToGreenMarker() {
         jumpToPosition(getStartMarkerMs());
+        performUiHaptic();
+        showUiFeedback(R.string.player_jump_green_done);
     }
 
     private void jumpToRedMarker() {
         jumpToPosition(getEndMarkerMs());
+        performUiHaptic();
+        showUiFeedback(R.string.player_jump_red_done);
     }
 
     private void jumpToPosition(int positionMs) {
@@ -596,12 +612,16 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
         int totalMs = Math.max(1, seekBar.getMax());
         float fraction = Math.max(0f, Math.min(1f, seekBar.getProgress() / (float) totalMs));
         waveformView.setStartMarker(fraction);
+        performUiHaptic();
+        showUiFeedback(R.string.player_marker_green_set);
     }
 
     private void setEndMarkerToCurrentPosition() {
         int totalMs = Math.max(1, seekBar.getMax());
         float fraction = Math.max(0f, Math.min(1f, seekBar.getProgress() / (float) totalMs));
         waveformView.setEndMarker(fraction);
+        performUiHaptic();
+        showUiFeedback(R.string.player_marker_red_set);
     }
 
     private void syncMediaPlayerToSeekbar() {
@@ -619,9 +639,36 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
         boolean forwardActive = mediaPlayer != null && mediaPlayer.isPlaying() && !reversePlaying;
         boolean reverseActive = reversePlaying || reverseRequested;
         boolean repeatActive = repeatEnabled;
-        btnPlay.setColorFilter(forwardActive ? activeIconColor : inactiveIconColor);
-        btnRewind.setColorFilter(reverseActive ? activeIconColor : inactiveIconColor);
-        btnRepeat.setColorFilter(repeatActive ? activeIconColor : inactiveIconColor);
+        setControlActiveStyle(btnPlay, forwardActive);
+        setControlActiveStyle(btnRewind, reverseActive);
+        setControlActiveStyle(btnRepeat, repeatActive);
+    }
+
+    private void setControlActiveStyle(ImageButton button, boolean active) {
+        boolean wasActive = controlActiveStates.get(button.getId(), false);
+        button.setColorFilter(active ? activeIconColor : inactiveIconColor);
+        button.setBackgroundResource(active ? R.drawable.bg_player_control_active : R.drawable.bg_player_control_idle);
+        if (active && !wasActive) {
+            button.animate().cancel();
+            button.setScaleX(0.92f);
+            button.setScaleY(0.92f);
+            button.animate().scaleX(1f).scaleY(1f).setDuration(140).start();
+        }
+        controlActiveStates.put(button.getId(), active);
+    }
+
+    private void performUiHaptic() {
+        View root = findViewById(android.R.id.content);
+        if (root != null) {
+            root.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);
+        }
+    }
+
+    private void showUiFeedback(@StringRes int textRes) {
+        View root = findViewById(android.R.id.content);
+        if (root != null) {
+            Snackbar.make(root, textRes, Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     private int markerFractionToFrame(float fraction, int totalFrames) {
