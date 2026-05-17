@@ -11,12 +11,12 @@ import android.widget.Toast;
 
 import com.jrgames.audiorecorder.ui.OrbitalDotsView;
 import com.jrgames.audiorecorder.ui.PlayerActivity;
-import com.jrgames.audiorecorder.ui.TrimActivity;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity
     private OrbitalDotsView orbitalDots;
 
     private Recording pendingRenameRecording;
-    private Recording pendingTrimRecording;
 
     private final ActivityResultLauncher<String[]> permissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
@@ -53,19 +52,9 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
-    private final ActivityResultLauncher<Intent> trimLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null
-                        && pendingTrimRecording != null) {
-                    String newPath = result.getData().getStringExtra(TrimActivity.RESULT_NEW_FILE_PATH);
-                    long newDuration = result.getData().getLongExtra(TrimActivity.RESULT_NEW_DURATION_MS, 0);
-                    viewModel.applyTrim(pendingTrimRecording, newPath, newDuration);
-                    pendingTrimRecording = null;
-                }
-            });
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -182,15 +171,6 @@ public class MainActivity extends AppCompatActivity
                 .show(getSupportFragmentManager(), "webdav_upload");
     }
 
-    @Override
-    public void onTrimClicked(Recording recording) {
-        pendingTrimRecording = recording;
-        Intent intent = new Intent(this, TrimActivity.class);
-        intent.putExtra(TrimActivity.EXTRA_FILE_PATH, recording.filePath);
-        intent.putExtra(TrimActivity.EXTRA_DURATION_MS, recording.durationMs);
-        intent.putExtra(TrimActivity.EXTRA_RECORDING_ID, recording.id);
-        trimLauncher.launch(intent);
-    }
 
     @Override
     public void onRenameClicked(Recording recording) {

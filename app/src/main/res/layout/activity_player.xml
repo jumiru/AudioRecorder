@@ -40,6 +40,7 @@
             android:id="@+id/waveform_player"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:layout_marginHorizontal="@dimen/space_3"
             android:layout_marginTop="12dp"
             android:contentDescription="@string/player_waveform_desc" />
 
@@ -47,6 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginHorizontal="@dimen/space_3"
             android:layout_marginTop="12dp">
 
             <TextView
@@ -69,6 +71,7 @@
             android:id="@+id/seek_player"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_3"
             android:layout_marginTop="6dp" />
 
         <com.google.android.material.card.MaterialCardView
@@ -281,19 +284,19 @@
                         app:tint="?android:attr/textColorSecondary" />
 
                     <ImageButton
-                        android:id="@+id/btn_player_trim"
-                        style="@style/Widget.AudioRecorder.IconButton"
-                        android:layout_marginHorizontal="8dp"
-                        android:contentDescription="@string/trim_desc"
-                        app:srcCompat="@drawable/ic_scissors"
-                        app:tint="?android:attr/textColorSecondary" />
-
-                    <ImageButton
                         android:id="@+id/btn_player_rename"
                         style="@style/Widget.AudioRecorder.IconButton"
                         android:layout_marginHorizontal="8dp"
                         android:contentDescription="@string/rename_desc"
                         app:srcCompat="@drawable/ic_edit"
+                        app:tint="?android:attr/textColorSecondary" />
+
+                    <ImageButton
+                        android:id="@+id/btn_player_cut"
+                        style="@style/Widget.AudioRecorder.IconButton"
+                        android:layout_marginHorizontal="8dp"
+                        android:contentDescription="@string/player_cut_desc"
+                        app:srcCompat="@drawable/ic_scissors"
                         app:tint="?android:attr/textColorSecondary" />
 
                     <ImageButton

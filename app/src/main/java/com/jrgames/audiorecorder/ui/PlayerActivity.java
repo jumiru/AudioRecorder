@@ -7,6 +7,7 @@ import android.media.AudioTrack;
 import android.media.MediaCodec;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
+import android.media.MediaMuxer;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,8 +22,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,6 +36,7 @@ import com.jrgames.audiorecorder.data.Recording;
 import com.jrgames.audiorecorder.viewmodel.MainViewModel;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -138,21 +138,6 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
     private AudioTrack reverseAudioTrack;
     private PcmAudioData reversePcmData;
 
-    private final ActivityResultLauncher<Intent> trimLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    String newPath = result.getData().getStringExtra(TrimActivity.RESULT_NEW_FILE_PATH);
-                    long newDuration = result.getData().getLongExtra(TrimActivity.RESULT_NEW_DURATION_MS, 0);
-                    if (newPath != null && !newPath.isEmpty()) {
-                        viewModel.applyTrim(recording, newPath, newDuration);
-                        recording.filePath = newPath;
-                        recording.durationMs = newDuration;
-                        waveformView.loadAudio(recording.filePath);
-                        preparePlayer();
-                    }
-                }
-            });
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -211,6 +196,7 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
         tvCurrent.setText(formatTime(0));
         tvTotal.setText(formatTime(recording.durationMs));
         seekBar.setMax((int) Math.max(0, recording.durationMs));
+        updateWaveformPlayback(0);
         waveformView.loadAudio(recording.filePath);
     }
 
@@ -253,6 +239,7 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     tvCurrent.setText(formatTime(progress));
+                    updateWaveformPlayback(progress);
                 }
             }
 
@@ -268,6 +255,7 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
                 if (mediaPlayer != null) {
                     mediaPlayer.seekTo(seekBar.getProgress());
                     tvCurrent.setText(formatTime(mediaPlayer.getCurrentPosition()));
+                    updateWaveformPlayback(mediaPlayer.getCurrentPosition());
                 }
             }
         });
@@ -275,20 +263,14 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
 
     private void bindActionControls() {
         ImageButton btnUpload = findViewById(R.id.btn_player_upload);
-        ImageButton btnTrim = findViewById(R.id.btn_player_trim);
         ImageButton btnRename = findViewById(R.id.btn_player_rename);
+        ImageButton btnCut = findViewById(R.id.btn_player_cut);
         ImageButton btnDelete = findViewById(R.id.btn_player_delete);
 
         btnUpload.setOnClickListener(v -> WebDavUploadDialogFragment.newInstance(recording)
                 .show(getSupportFragmentManager(), "webdav_upload"));
 
-        btnTrim.setOnClickListener(v -> {
-            Intent intent = new Intent(this, TrimActivity.class);
-            intent.putExtra(TrimActivity.EXTRA_FILE_PATH, recording.filePath);
-            intent.putExtra(TrimActivity.EXTRA_DURATION_MS, recording.durationMs);
-            intent.putExtra(TrimActivity.EXTRA_RECORDING_ID, recording.id);
-            trimLauncher.launch(intent);
-        });
+        btnCut.setOnClickListener(v -> trimToMarkers());
 
         btnRename.setOnClickListener(v -> {
             RenameDialogFragment dialog = RenameDialogFragment.newInstance(recording.displayName);
@@ -319,6 +301,7 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
             tvTotal.setText(formatTime(duration));
             seekBar.setProgress(0);
             tvCurrent.setText(formatTime(0));
+            updateWaveformPlayback(0);
 
             mediaPlayer.setOnCompletionListener(mp -> stop());
         } catch (IOException e) {
@@ -365,6 +348,7 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
         }
         seekBar.setProgress(0);
         tvCurrent.setText(formatTime(0));
+        updateWaveformPlayback(0);
         updateDirectionButtonsUi();
     }
 
@@ -375,6 +359,7 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
         }
         seekBar.setProgress(0);
         tvCurrent.setText(formatTime(0));
+        updateWaveformPlayback(0);
         performUiHaptic();
         showUiFeedback(R.string.player_jump_start_done);
         updateDirectionButtonsUi();
@@ -413,6 +398,7 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
         }
         seekBar.setProgress(clamped);
         tvCurrent.setText(formatTime(clamped));
+        updateWaveformPlayback(clamped);
 
         forwardPlaying = continueForwardPlayback;
         if (continueForwardPlayback) {
@@ -563,6 +549,7 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
                         if (!isUserSeeking) {
                             seekBar.setProgress(progressMs);
                             tvCurrent.setText(formatTime(progressMs));
+                            updateWaveformPlayback(progressMs);
                         }
                     });
                 }
@@ -585,6 +572,7 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
                     if (wasPlaying) {
                         seekBar.setProgress(finalProgressMs);
                         tvCurrent.setText(formatTime(finalProgressMs));
+                        updateWaveformPlayback(finalProgressMs);
                         syncMediaPlayerToSeekbar();
                     }
                     updateDirectionButtonsUi();
@@ -630,6 +618,16 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
         }
         int targetMs = Math.max(0, Math.min(seekBar.getProgress(), seekBar.getMax()));
         mediaPlayer.seekTo(targetMs);
+        updateWaveformPlayback(targetMs);
+    }
+
+    private void updateWaveformPlayback(int positionMs) {
+        if (waveformView == null) {
+            return;
+        }
+        int totalMs = Math.max(1, seekBar.getMax());
+        float fraction = Math.max(0f, Math.min(1f, positionMs / (float) totalMs));
+        waveformView.setPlaybackFraction(fraction);
     }
 
     private void updateDirectionButtonsUi() {
@@ -795,6 +793,7 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
                     if (!isUserSeeking) {
                         seekBar.setProgress(position);
                         tvCurrent.setText(formatTime(position));
+                        updateWaveformPlayback(position);
                     }
                     if (forwardPlaying) {
                         progressHandler.postDelayed(this, 150);
@@ -903,6 +902,113 @@ public class PlayerActivity extends AppCompatActivity implements RenameDialogFra
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void trimToMarkers() {
+        int startMs = getStartMarkerMs();
+        int endMs = getEndMarkerMs();
+        if (endMs <= startMs) {
+            showUiFeedback(R.string.player_trim_invalid_range);
+            return;
+        }
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.player_trim_title)
+                .setMessage(getString(R.string.player_trim_message, formatTime(startMs), formatTime(endMs)))
+                .setPositiveButton(R.string.player_trim_ok, (d, w) -> {
+                    stop();
+                    releasePlayer();
+                    executeTrim(startMs, endMs);
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private void executeTrim(int startMs, int endMs) {
+        String inputPath = recording.filePath;
+        String tempPath = inputPath + ".trim_tmp";
+        long newDurationMs = endMs - startMs;
+
+        ExecutorService trimExecutor = Executors.newSingleThreadExecutor();
+        trimExecutor.execute(() -> {
+            try {
+                doTrimFile(inputPath, tempPath, startMs * 1000L, endMs * 1000L);
+
+                File original = new File(inputPath);
+                File temp = new File(tempPath);
+                original.delete();
+                if (!temp.renameTo(original)) {
+                    throw new IOException("Temp-Datei konnte nicht umbenannt werden");
+                }
+
+                viewModel.applyTrim(recording, inputPath, newDurationMs);
+
+                runOnUiThread(() -> {
+                    waveformView.setStartMarker(0f);
+                    waveformView.setEndMarker(1f);
+                    reversePcmData = null;
+                    recording.durationMs = newDurationMs;
+                    preparePlayer();
+                    waveformView.loadAudio(recording.filePath);
+                    showUiFeedback(R.string.player_trim_done);
+                });
+            } catch (Exception e) {
+                new File(tempPath).delete();
+                runOnUiThread(() -> Toast.makeText(this, R.string.player_trim_error, Toast.LENGTH_SHORT).show());
+            }
+            trimExecutor.shutdown();
+        });
+    }
+
+    private void doTrimFile(String inputPath, String outputPath, long startUs, long endUs) throws IOException {
+        MediaExtractor extractor = new MediaExtractor();
+        extractor.setDataSource(inputPath);
+
+        int trackIndex = -1;
+        for (int i = 0; i < extractor.getTrackCount(); i++) {
+            MediaFormat fmt = extractor.getTrackFormat(i);
+            String mime = fmt.getString(MediaFormat.KEY_MIME);
+            if (mime != null && mime.startsWith("audio/")) {
+                trackIndex = i;
+                break;
+            }
+        }
+        if (trackIndex < 0) {
+            extractor.release();
+            throw new IOException("Kein Audio-Track gefunden");
+        }
+
+        extractor.selectTrack(trackIndex);
+        MediaFormat format = extractor.getTrackFormat(trackIndex);
+
+        MediaMuxer muxer = new MediaMuxer(outputPath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
+        int muxTrack = muxer.addTrack(format);
+        muxer.start();
+
+        extractor.seekTo(startUs, MediaExtractor.SEEK_TO_PREVIOUS_SYNC);
+
+        ByteBuffer buffer = ByteBuffer.allocate(512 * 1024);
+        MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
+
+        while (true) {
+            int size = extractor.readSampleData(buffer, 0);
+            if (size < 0) break;
+
+            long sampleTime = extractor.getSampleTime();
+            if (sampleTime > endUs) break;
+
+            if (sampleTime >= startUs) {
+                info.offset = 0;
+                info.size = size;
+                info.presentationTimeUs = sampleTime - startUs;
+                info.flags = extractor.getSampleFlags();
+                muxer.writeSampleData(muxTrack, buffer, info);
+            }
+            extractor.advance();
+        }
+
+        muxer.stop();
+        muxer.release();
+        extractor.release();
     }
 
     private static final class PcmAudioData {

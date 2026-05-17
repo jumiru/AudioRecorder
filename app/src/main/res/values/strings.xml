@@ -29,20 +29,6 @@
     <string name="webdav_upload_error">Fehler: %s</string>
     <string name="webdav_error_server_empty">Server-URL darf nicht leer sein</string>
 
-    <!-- Trim -->
-    <string name="trim_desc">Trimmen</string>
-    <string name="trim_title">Aufnahme trimmen</string>
-    <string name="trim_start">Start</string>
-    <string name="trim_end">Ende</string>
-    <string name="trim_hint">Marker ziehen · Pinch zum Zoomen · Scrollen</string>
-    <string name="trim_preview">▶ Vorschau</string>
-    <string name="trim_stop_preview">⏹ Stop</string>
-    <string name="trim_cut">Schneiden</string>
-    <string name="trim_confirm_title">Aufnahme schneiden</string>
-    <string name="trim_confirm_message">Bereich %1$s – %2$s behalten und Rest entfernen?</string>
-    <string name="trim_processing">Wird verarbeitet…</string>
-    <string name="trim_success">Aufnahme erfolgreich getrimmt</string>
-    <string name="trim_error">Fehler: %1$s</string>
 
     <!-- Player -->
     <string name="player_title">Player</string>
@@ -83,5 +69,12 @@
     <string name="player_load_error">Aufnahme konnte nicht geladen werden</string>
     <string name="player_play_error">Wiedergabe konnte nicht gestartet werden</string>
     <string name="player_reverse_error">Ruckwartswiedergabe konnte nicht gestartet werden</string>
+    <string name="player_cut_desc">Markierten Bereich behalten, Rest schneiden</string>
+    <string name="player_trim_title">Aufnahme schneiden</string>
+    <string name="player_trim_message">Bereich von %1$s bis %2$s behalten und alles außerhalb entfernen?</string>
+    <string name="player_trim_ok">Schneiden</string>
+    <string name="player_trim_done">Aufnahme erfolgreich geschnitten</string>
+    <string name="player_trim_error">Schneiden fehlgeschlagen</string>
+    <string name="player_trim_invalid_range">Ungültiger Bereich: roter Marker muss nach grünem liegen</string>
 </resources>
 

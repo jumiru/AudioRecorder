@@ -46,6 +46,12 @@ public class WaveformView extends View {
     // Markers (0..1 fractions of total duration)
     private float startMarker = 0f;
     private float endMarker   = 1f;
+    private float playbackFraction = 0f;
+
+    // Smooth cursor animation
+    private float displayFraction = 0f;
+    private android.animation.ValueAnimator cursorAnimator;
+    private long lastSetFractionMs = -1L;
 
     // Touch handling
     private static final int TOUCH_NONE  = 0;
@@ -67,6 +73,7 @@ public class WaveformView extends View {
     private final Paint endMarkerPaint   = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint regionPaint      = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint handlePaint      = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint playheadPaint    = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint textPaint        = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint loadingPaint     = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -95,6 +102,9 @@ public class WaveformView extends View {
         regionPaint.setStyle(Paint.Style.FILL);
 
         handlePaint.setStyle(Paint.Style.FILL);
+
+        playheadPaint.setColor(0xFFFFFFFF);
+        playheadPaint.setStrokeWidth(dpToPx(2f));
 
         textPaint.setTextSize(dpToPx(11));
         textPaint.setColor(Color.WHITE);
@@ -164,6 +174,35 @@ public class WaveformView extends View {
     public float getStartMarker() { return startMarker; }
     public float getEndMarker()   { return endMarker;   }
 
+    public void setPlaybackFraction(float fraction) {
+        long nowMs = android.os.SystemClock.elapsedRealtime();
+        float target = clampFraction(fraction);
+        playbackFraction = target;
+
+        boolean rapidUpdate = lastSetFractionMs >= 0 && (nowMs - lastSetFractionMs) < 50;
+        boolean bigJump = Math.abs(target - displayFraction) > 0.08f;
+        lastSetFractionMs = nowMs;
+
+        if (cursorAnimator != null) cursorAnimator.cancel();
+
+        if (rapidUpdate || bigJump) {
+            // Seek oder schnelles Scrubbing → sofort snappen
+            displayFraction = target;
+            invalidate();
+            return;
+        }
+
+        // Normaler Playback-Tick (~150 ms Abstand) → flüssig animieren
+        cursorAnimator = android.animation.ValueAnimator.ofFloat(displayFraction, target);
+        cursorAnimator.setDuration(155);
+        cursorAnimator.setInterpolator(new android.view.animation.LinearInterpolator());
+        cursorAnimator.addUpdateListener(a -> {
+            displayFraction = (float) a.getAnimatedValue();
+            invalidate();
+        });
+        cursorAnimator.start();
+    }
+
     public void setStartMarker(float fraction) {
         float clamped = snapFractionToZeroCrossing(fraction);
         startMarker = Math.min(clamped, endMarker - 0.01f);
@@ -197,6 +236,10 @@ public class WaveformView extends View {
         loadError = null;
         startMarker = 0f;
         endMarker = 1f;
+        playbackFraction = 0f;
+        if (cursorAnimator != null) cursorAnimator.cancel();
+        displayFraction = 0f;
+        lastSetFractionMs = -1L;
         zoom = 1f;
         scrollX = 0f;
         notifyMarkerChanged();
@@ -218,6 +261,40 @@ public class WaveformView extends View {
                 });
             }
         });
+    }
+
+    // ── Layout / Gesture exclusion ───────────────────────────────────────────
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        updateGestureExclusionRects();
+    }
+
+    private void updateGestureExclusionRects() {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.Q) return;
+        int w = getWidth();
+        int h = getHeight();
+        if (w == 0 || h == 0) return;
+
+        float totalWidth = w * zoom;
+        float startPx = startMarker * totalWidth - scrollX;
+        float endPx   = endMarker   * totalWidth - scrollX;
+        float hitR    = dpToPx(32); // etwas großzügiger als der 20dp Hit-Radius
+
+        java.util.List<android.graphics.Rect> rects = new java.util.ArrayList<>();
+
+        // Zone um den grünen Marker
+        int sl = (int) Math.max(0, startPx - hitR);
+        int sr = (int) Math.min(w, startPx + hitR);
+        if (sr > sl) rects.add(new android.graphics.Rect(sl, 0, sr, h));
+
+        // Zone um den roten Marker
+        int el = (int) Math.max(0, endPx - hitR);
+        int er = (int) Math.min(w, endPx + hitR);
+        if (er > el) rects.add(new android.graphics.Rect(el, 0, er, h));
+
+        setSystemGestureExclusionRects(rects);
     }
 
     // ── Drawing ──────────────────────────────────────────────────────────────
@@ -275,6 +352,12 @@ public class WaveformView extends View {
         // End marker line
         canvas.drawLine(endPx, 0, endPx, h, endMarkerPaint);
         drawHandle(canvas, endPx, false);
+
+        // Current playback position line
+        float playPx = displayFraction * totalWidth - scrollX;
+        if (playPx >= 0 && playPx <= w) {
+            canvas.drawLine(playPx, 0, playPx, h, playheadPaint);
+        }
     }
 
     private void drawHandle(Canvas canvas, float x, boolean isStart) {
@@ -361,6 +444,7 @@ public class WaveformView extends View {
 
     private void notifyMarkerChanged() {
         if (markerListener != null) markerListener.onMarkersChanged(startMarker, endMarker);
+        updateGestureExclusionRects();
     }
 
     private float maxScrollX() {
@@ -558,6 +642,7 @@ public class WaveformView extends View {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        if (cursorAnimator != null) cursorAnimator.cancel();
         executor.shutdownNow();
     }
 }
